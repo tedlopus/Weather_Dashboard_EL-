@@ -29,7 +29,7 @@ var inputSubmitHandler = function () {
         return response.json()
     }).then(apidata=>{
         console.log(apidata);
-        var long = apidata.coord.long
+        var long = apidata.coord.lon
         var lat =apidata.coord.lat
         document.getElementById('cityName').textContent = cityName
         getForecast(lat,long)
@@ -39,12 +39,18 @@ var inputSubmitHandler = function () {
 
 
   function getForecast (lat, long) {
-    URL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}`
+    URL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=hourly,alerts,minutely&appid=${apiKey}&units=imperial`
     fetch(URL)
     .then(response =>{
         return response.json()
     }).then(apidata=>{
         console.log(apidata);
+        var forecast = `<h4>Description:${apidata.current.weather[0].description}.
+        <img src="https://openweathermap.org/img/wn/${apidata.current.weather[0].icon}@2x.png" /></h4>
+        <h5>Wind speed:${apidata.wind_speed}</h5>
+        <h5>Humidity:${apidata.humidity}</h5>
+        `
+        document.getElementById("current-forecast").innerHTML= forecast
     })
   }
 //Going to need to create a way for the current date to populate using moment and getting the next 5 days after that
